@@ -12,18 +12,20 @@ public class Verification {
     private int transactionID;
     private String username;
     private double amount;
-    private Subscriber subscriber;
+    private double payable;
     private String transactionType;
     private int status;
 
-    public Verification(int transactionID, String username, double amount, Subscriber s, String transactionType, int status) {
+    public Verification(int transactionID, String username, double amount, double payable, String transactionType, int status) {
         this.transactionID = transactionID;
         this.username = username;
         this.amount = amount;
-        this.subscriber = s;
+        this.payable = payable;
         this.transactionType = transactionType;
         this.status = status;
     }
+    
+    
 
     public int getTransactionID() {
         return transactionID;
@@ -32,7 +34,7 @@ public class Verification {
     public void setTransactionID(int transactionID) {
         this.transactionID = transactionID;
     }
-    
+
     public String getUsername() {
         return username;
     }
@@ -49,12 +51,12 @@ public class Verification {
         this.amount = amount;
     }
 
-    public Subscriber getSubscriber() {
-        return subscriber;
+    public double getPayable() {
+        return payable;
     }
 
-    public void setSubscriber(Subscriber s) {
-        this.subscriber = s;
+    public void setPayable(double payable) {
+        this.payable = payable;
     }
 
     public String getTransactionType() {
@@ -72,8 +74,6 @@ public class Verification {
     public void setStatus(int status) {
         this.status = status;
     }
-
-    
     
     
 }

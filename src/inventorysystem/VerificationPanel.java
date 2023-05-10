@@ -4,7 +4,10 @@
  */
 package inventorysystem;
 
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,13 +29,25 @@ public class VerificationPanel extends javax.swing.JFrame {
     }
     
     public void displayTable() {
-            ArrayList<Verification> verify = conn.displayVerification();
-            for(Verification v: verify){
-                Subscriber s = v.getSubscriber();
-                Object[] data = {v.getTransactionID(),v.getUsername(),v.getAmount(),s.getPayable(),s.getSubscribertype(),v.getTransactionType(),v.getStatus()};
-                tbl.addRow(data);  
+        ResultSet rs = conn.displayVerification();
+        try {
+            while(rs.next()) {
+                String status;
+                if(rs.getInt("status")==0) {
+                    status = "Pending";
+                } else if(rs.getInt("status")==1) {
+                    status="Approved";
+                } else {
+                    status="Rejected";
+                }
+                
+                Object[] data = {rs.getInt("transactionID"), rs.getString("username"),rs.getDouble("amount"),rs.getDouble("balance"),rs.getString("subscriptionType"),rs.getString("transactionType"),status};
+                tbl.addRow(data);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,6 +58,7 @@ public class VerificationPanel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBox1 = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblVerification = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -57,10 +73,13 @@ public class VerificationPanel extends javax.swing.JFrame {
         txtSubscription = new javax.swing.JTextField();
         txtTransaction = new javax.swing.JTextField();
         btnApprove = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnRejected = new javax.swing.JButton();
         btnReject = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         txtPayable = new javax.swing.JTextField();
+        btnClear = new javax.swing.JButton();
+
+        jCheckBox1.setText("jCheckBox1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(862, 441));
@@ -91,8 +110,18 @@ public class VerificationPanel extends javax.swing.JFrame {
         jLabel1.setText("Filter Status");
 
         btnPending.setText("Pending");
+        btnPending.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPendingActionPerformed(evt);
+            }
+        });
 
         btnApproved.setText("Approved");
+        btnApproved.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApprovedActionPerformed(evt);
+            }
+        });
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("Username");
@@ -107,12 +136,32 @@ public class VerificationPanel extends javax.swing.JFrame {
         jLabel5.setText("Transaction");
 
         txtAmount.setEditable(false);
+        txtAmount.setForeground(new java.awt.Color(255, 255, 255));
+        txtAmount.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        txtAmount.setEnabled(false);
+        txtAmount.setOpaque(true);
+        txtAmount.setSelectionColor(new java.awt.Color(0, 0, 0));
 
         txtUsername.setEditable(false);
+        txtUsername.setForeground(new java.awt.Color(255, 255, 255));
+        txtUsername.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        txtUsername.setEnabled(false);
+        txtUsername.setOpaque(true);
+        txtUsername.setSelectionColor(new java.awt.Color(0, 0, 0));
 
         txtSubscription.setEditable(false);
+        txtSubscription.setForeground(new java.awt.Color(255, 255, 255));
+        txtSubscription.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        txtSubscription.setEnabled(false);
+        txtSubscription.setOpaque(true);
+        txtSubscription.setSelectionColor(new java.awt.Color(0, 0, 0));
 
         txtTransaction.setEditable(false);
+        txtTransaction.setForeground(new java.awt.Color(255, 255, 255));
+        txtTransaction.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        txtTransaction.setEnabled(false);
+        txtTransaction.setOpaque(true);
+        txtTransaction.setSelectionColor(new java.awt.Color(0, 0, 0));
 
         btnApprove.setText("Approve");
         btnApprove.setEnabled(false);
@@ -122,7 +171,12 @@ public class VerificationPanel extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Rejected");
+        btnRejected.setText("Rejected");
+        btnRejected.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRejectedActionPerformed(evt);
+            }
+        });
 
         btnReject.setText("Reject");
         btnReject.setEnabled(false);
@@ -136,6 +190,18 @@ public class VerificationPanel extends javax.swing.JFrame {
         jLabel6.setText("Payable");
 
         txtPayable.setEditable(false);
+        txtPayable.setForeground(new java.awt.Color(255, 255, 255));
+        txtPayable.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        txtPayable.setEnabled(false);
+        txtPayable.setOpaque(true);
+        txtPayable.setSelectionColor(new java.awt.Color(0, 0, 0));
+
+        btnClear.setText("Clear Filters");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -144,50 +210,62 @@ public class VerificationPanel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnPending)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1)
+                        .addGap(12, 12, 12)
+                        .addComponent(btnPending)
+                        .addGap(12, 12, 12)
                         .addComponent(btnApproved)
                         .addGap(12, 12, 12)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
+                        .addComponent(btnRejected)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPayable, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSubscription, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTransaction, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnApprove)
-                                .addGap(12, 12, 12)
-                                .addComponent(btnReject)))))
-                .addContainerGap())
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPayable, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtSubscription, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTransaction, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnApprove)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(btnReject))))
+                            .addComponent(btnClear))
+                        .addGap(44, 44, 44))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1)
+                .addGap(8, 8, 8))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jScrollPane1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
-                        .addComponent(btnPending)
-                        .addGap(46, 46, 46)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnPending)
+                            .addComponent(btnApproved)
+                            .addComponent(btnRejected))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
                         .addComponent(jLabel2)
                         .addGap(24, 24, 24)
                         .addComponent(jLabel3)
@@ -196,11 +274,6 @@ public class VerificationPanel extends javax.swing.JFrame {
                         .addGap(24, 24, 24)
                         .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnApproved)
-                            .addComponent(jButton1))
-                        .addGap(43, 43, 43)
                         .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -216,7 +289,9 @@ public class VerificationPanel extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnApprove)
                             .addComponent(btnReject))))
-                .addGap(8, 8, 8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnClear)
+                .addGap(26, 26, 26))
         );
 
         pack();
@@ -235,14 +310,20 @@ public class VerificationPanel extends javax.swing.JFrame {
         txtPayable.setText(Double.toString(payable));
         txtSubscription.setText(subscription);
         txtTransaction.setText(transaction);
-        btnApprove.setEnabled(true);
-        btnReject.setEnabled(true);
+        if(tblVerification.getValueAt(index,6)=="Pending") {
+            btnApprove.setEnabled(true);
+            btnReject.setEnabled(true);
+        } else {
+            btnApprove.setEnabled(false);
+            btnReject.setEnabled(false);
+        }
     }//GEN-LAST:event_tblVerificationMouseClicked
 
     private void btnApproveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnApproveMouseClicked
         // TODO add your handling code here:
         int index=tblVerification.getSelectedRow();
         int transactionID = (Integer) tblVerification.getValueAt(index,0);
+        double amount = (Double) tblVerification.getValueAt(index,2);
         conn.approveTransaction(transactionID);
         tbl.setRowCount(0);
         displayTable();
@@ -260,6 +341,70 @@ public class VerificationPanel extends javax.swing.JFrame {
         btnApprove.setEnabled(false);
         btnReject.setEnabled(false);
     }//GEN-LAST:event_btnRejectMouseClicked
+
+    private void btnPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPendingActionPerformed
+        // TODO add your handling code here:
+        ResultSet rs = conn.displayVerificationFiltered(0);
+        tbl.setRowCount(0);
+        try {
+            while(rs.next()) {
+                String status=null;
+                if(rs.getInt("status")==0) {
+                    status = "Pending";
+                }                
+                Object[] data = {rs.getInt("transactionID"), rs.getString("username"),rs.getDouble("amount"),rs.getDouble("balance"),rs.getString("subscriptionType"),rs.getString("transactionType"),status};
+                tbl.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPendingActionPerformed
+
+    private void btnApprovedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApprovedActionPerformed
+        // TODO add your handling code here:
+        ResultSet rs = conn.displayVerificationFiltered(1);
+        tbl.setRowCount(0);
+        try {
+            while(rs.next()) {
+                String status= null;
+                if(rs.getInt("status")==1) {
+                    status="Approved";
+                } 
+                
+                Object[] data = {rs.getInt("transactionID"), rs.getString("username"),rs.getDouble("amount"),rs.getDouble("balance"),rs.getString("subscriptionType"),rs.getString("transactionType"),status};
+                tbl.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnApprovedActionPerformed
+
+    private void btnRejectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectedActionPerformed
+        // TODO add your handling code here:
+        ResultSet rs = conn.displayVerificationFiltered(-1);
+        tbl.setRowCount(0);
+        try {
+            while(rs.next()) {
+                String status = null;
+                if(rs.getInt("status")==-1) {
+                    status="Rejected";
+                }
+                
+                Object[] data = {rs.getInt("transactionID"), rs.getString("username"),rs.getDouble("amount"),rs.getDouble("balance"),rs.getString("subscriptionType"),rs.getString("transactionType"),status};
+                tbl.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnRejectedActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        tbl.setRowCount(0);
+        displayTable();
+    }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,9 +445,11 @@ public class VerificationPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApprove;
     private javax.swing.JButton btnApproved;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnPending;
     private javax.swing.JButton btnReject;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnRejected;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
