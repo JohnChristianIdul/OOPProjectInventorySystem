@@ -247,4 +247,149 @@ public class Connect {
         }
         return null;
     }
+    
+    public ResultSet checkSubscriber(int subscriberID) {
+        Statement stmt;
+        String sql;
+        ResultSet rs = null;
+        try {
+            stmt = conn.createStatement();
+            sql = "SELECT * from subscriber where subscriberID = "+subscriberID+"";
+            rs = stmt.executeQuery(sql);
+            if(rs.next()) return rs;
+        } catch(SQLException ss) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null,ss);
+        }
+        return null;
+    }
+    
+    public boolean createInventory(int subscriberID, String inventoryName) {
+        Statement stmt;
+        String sql;
+        ResultSet rs = null, rs2 = null;
+        int count = 1;
+        int check;
+        
+        if(checkInventoryName(subscriberID, inventoryName)) {
+            JOptionPane.showMessageDialog(null, "Inventory exists!");
+            return false;
+        }
+        
+        try {
+            stmt = conn.createStatement();
+            sql = "SELECT subscriptionType from subscriber where subscriberID = "+subscriberID+"";
+            rs = stmt.executeQuery(sql);
+            rs2 = checkInventoryID();
+            if(rs2 != null) count = rs2.getInt("inventoryID") + 1;
+            while(rs.next()) {
+            if(rs.getString("subscriptionType").equalsIgnoreCase("Corporate")) {
+                sql = "INSERT INTO inventory VALUES("+count+", '"+inventoryName+"', "+subscriberID+")";
+                stmt.executeUpdate(sql);
+                //sql = "CREATE TABLE " + inventoryName + " (" +"itemID INT(3) PRIMARY KEY AUTO_INCREMENT," +"itemName VARCHAR(20) NOT NULL," +"description VARCHAR(20) NOT NULL," +"itemQuantity INT(3) NOT NULL," +"inventoryID INT(3) NOT NULL," +"isVisible TINYINT(1) NOT NULL" +")";
+                //stmt.executeUpdate(sql);
+                return true;
+            } else {
+                check = checkCapacity(subscriberID);
+                if(check < 20) {
+                    sql = "INSERT INTO inventory VALUES("+count+", '"+inventoryName+"', "+subscriberID+")";
+                    stmt.executeUpdate(sql);
+                    return true;
+                } else JOptionPane.showMessageDialog(null, "Out of capacity!");
+            }
+            }
+        } catch(SQLException s) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null,s);
+        }
+        return false;
+    }
+    
+    public ResultSet checkInventoryID() {
+        Statement stmt;
+        String sql;
+        ResultSet rs = null;
+        try {
+            stmt = conn.createStatement();
+            sql = "SELECT inventoryID from inventory order by inventoryID DESC";
+            rs = stmt.executeQuery(sql);
+            if(rs.next()) return rs;
+        } catch(SQLException ss) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null,ss);
+        }
+        return null;
+    }
+    
+    public boolean checkInventoryName(int subscriberID, String inventoryName) {
+        Statement stmt;
+        String sql;
+        ResultSet rs = null;
+        try {
+            stmt = conn.createStatement();
+            sql = "select inventoryName from inventory where subscriberID = "+subscriberID+"";
+            rs = stmt.executeQuery(sql);
+            while(rs.next()) { 
+                if(rs.getString("inventoryName").equalsIgnoreCase(inventoryName)) return true;
+            }   
+        } catch(SQLException ss) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null,ss);
+        }
+        return false;
+    }
+    
+    public int checkCapacity(int subscriberID) {
+        Statement stmt;
+        String sql;
+        ResultSet rs = null;
+        int num = 0;
+        try {
+            stmt = conn.createStatement();
+            sql = "select count(inventoryID) as numOfInventories from inventory where subscriberID = "+subscriberID+"";
+            rs = stmt.executeQuery(sql);
+            while(rs.next()) { 
+                num = rs.getInt("numOfInventories");
+            }   
+        } catch(SQLException ss) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null,ss);
+        }
+        return num;
+    }
+    
+    public ArrayList<Item> displayInventory(int inventoryID) {
+        ArrayList<Item> acc = new ArrayList<Item>();
+        String sql ="select itemID, itemName, itemDescription, itemQuantity, itemStatus from item where inventoryID = '"+inventoryID+"'";
+        Statement stmt;
+        ResultSet rs;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while(rs.next()){
+              Item a = new Item(rs.getInt("itemID"), rs.getString("itemName"), rs.getString("itemDescription"), rs.getInt("itemQuantity"), rs.getBoolean("itemStatus")); 
+              acc.add(a);
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return acc;
+    }
+    
+    public int getInventoryID(int subscriberID, String inventoryName){
+        Statement stmt;
+        String sql;
+        ResultSet rs = null;
+        int num = 0;
+        try {
+            stmt = conn.createStatement();
+            sql = "select inventoryID from inventory where subscriberID = "+subscriberID+" and inventoryName = '"+inventoryName+"'";
+            rs = stmt.executeQuery(sql);
+            while(rs.next()) { 
+                num = rs.getInt("inventoryID");
+            }   
+        } catch(SQLException ss) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null,ss);
+        }
+        return num;
+    }
 }

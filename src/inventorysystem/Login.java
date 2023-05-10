@@ -146,10 +146,14 @@ public class Login extends javax.swing.JFrame {
            mainGUI.show();
             this.dispose();
        } else if(result == 3) {
-           JOptionPane.showMessageDialog(this, "You are an entrepreneur");
+           //JOptionPane.showMessageDialog(this, "You are an entrepreneur");
+           CreateInventory ci = new CreateInventory();
+           ci.show();
             this.dispose();
        } else if(result ==4) {
-           JOptionPane.showMessageDialog(this, "You are an employee");
+           //JOptionPane.showMessageDialog(this, "You are an employee");
+           DisplayTable dt = new DisplayTable();
+           dt.show();
             this.dispose();
        } else if(result == 0){
            JOptionPane.showMessageDialog(this, "Incorrect username/password.");
