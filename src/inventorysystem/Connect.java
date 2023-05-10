@@ -82,7 +82,7 @@ public class Connect {
     }
     
     public ResultSet displayVerification(){
-        String sql ="select transactionid, username, amount, verification.subscriberid, subscriber.balance, subscription.subscriptiontype, transactiontype, status from verification, subscription, subscriber where verification.subscriberid=subscriber.subscriberid AND subscriber.subscriptiontype=subscription.subscriptiontype";
+        String sql ="select transactionid, username, amount, verification.subscriberid, subscriber.balance, subscriber.subscriptiontype, transactiontype, status from verification, subscriber where verification.subscriberid=subscriber.subscriberid";
         Statement stmt;
         ResultSet rs;
         try {
@@ -99,7 +99,7 @@ public class Connect {
     public ResultSet displayVerificationFiltered(int status) {
         ResultSet rs;
         Statement stmt;
-        String sql ="select transactionid, username, amount, verification.subscriberid, subscriber.balance, subscription.subscriptiontype, transactiontype, status from verification, subscription, subscriber where verification.subscriberid=subscriber.subscriberid AND subscriber.subscriptiontype=subscription.subscriptiontype AND status=" + status;
+        String sql ="select transactionid, username, amount, verification.subscriberid, subscriber.balance, subscriber.subscriptiontype, transactiontype, status from verification, subscriber where verification.subscriberid=subscriber.subscriberid AND status=" + status;
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);

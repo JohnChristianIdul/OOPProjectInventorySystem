@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -78,6 +79,7 @@ public class VerificationPanel extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtPayable = new javax.swing.JTextField();
         btnClear = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -203,13 +205,24 @@ public class VerificationPanel extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Back to Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -248,10 +261,6 @@ public class VerificationPanel extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jScrollPane1)
-                .addGap(8, 8, 8))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
@@ -262,7 +271,7 @@ public class VerificationPanel extends javax.swing.JFrame {
                             .addComponent(btnPending)
                             .addComponent(btnApproved)
                             .addComponent(btnRejected))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
@@ -289,9 +298,15 @@ public class VerificationPanel extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnApprove)
                             .addComponent(btnReject))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(btnClear)
                 .addGap(26, 26, 26))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -321,6 +336,8 @@ public class VerificationPanel extends javax.swing.JFrame {
 
     private void btnApproveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnApproveMouseClicked
         // TODO add your handling code here:
+        int input = JOptionPane.showConfirmDialog(null, "This action cannot be reverted. \nDo you still want to proceed?","Approve verification", JOptionPane.YES_NO_OPTION);
+        if(input == JOptionPane.YES_OPTION) {
         int index=tblVerification.getSelectedRow();
         int transactionID = (Integer) tblVerification.getValueAt(index,0);
         double amount = (Double) tblVerification.getValueAt(index,2);
@@ -329,10 +346,13 @@ public class VerificationPanel extends javax.swing.JFrame {
         displayTable();
         btnApprove.setEnabled(false);
         btnReject.setEnabled(false);
+        }
     }//GEN-LAST:event_btnApproveMouseClicked
 
     private void btnRejectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRejectMouseClicked
         // TODO add your handling code here:
+        int input = JOptionPane.showConfirmDialog(null, "This action cannot be reverted. \nDo you still want to proceed?","Approve verification", JOptionPane.YES_NO_OPTION);
+        if(input == JOptionPane.YES_OPTION) {
         int index=tblVerification.getSelectedRow();
         int transactionID = (Integer) tblVerification.getValueAt(index,0);
         conn.rejectTransaction(transactionID);
@@ -340,6 +360,7 @@ public class VerificationPanel extends javax.swing.JFrame {
         displayTable();
         btnApprove.setEnabled(false);
         btnReject.setEnabled(false);
+        }
     }//GEN-LAST:event_btnRejectMouseClicked
 
     private void btnPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPendingActionPerformed
@@ -362,22 +383,21 @@ public class VerificationPanel extends javax.swing.JFrame {
 
     private void btnApprovedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApprovedActionPerformed
         // TODO add your handling code here:
-        ResultSet rs = conn.displayVerificationFiltered(1);
-        tbl.setRowCount(0);
-        try {
-            while(rs.next()) {
-                String status= null;
-                if(rs.getInt("status")==1) {
-                    status="Approved";
-                } 
-                
-                Object[] data = {rs.getInt("transactionID"), rs.getString("username"),rs.getDouble("amount"),rs.getDouble("balance"),rs.getString("subscriptionType"),rs.getString("transactionType"),status};
-                tbl.addRow(data);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            ResultSet rs = conn.displayVerificationFiltered(1);
+            tbl.setRowCount(0);
+            try {
+                while(rs.next()) {
+                    String status= null;
+                    if(rs.getInt("status")==1) {
+                        status="Approved";
+                    } 
 
+                    Object[] data = {rs.getInt("transactionID"), rs.getString("username"),rs.getDouble("amount"),rs.getDouble("balance"),rs.getString("subscriptionType"),rs.getString("transactionType"),status};
+                    tbl.addRow(data);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_btnApprovedActionPerformed
 
     private void btnRejectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectedActionPerformed
@@ -397,7 +417,6 @@ public class VerificationPanel extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(VerificationPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_btnRejectedActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -405,6 +424,13 @@ public class VerificationPanel extends javax.swing.JFrame {
         tbl.setRowCount(0);
         displayTable();
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Login login = new Login();
+        login.show();
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -449,6 +475,7 @@ public class VerificationPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnPending;
     private javax.swing.JButton btnReject;
     private javax.swing.JButton btnRejected;
+    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
