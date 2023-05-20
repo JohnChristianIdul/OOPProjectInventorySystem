@@ -13,14 +13,13 @@ public class CorporateSubscriber extends Subscriber{
     private double monthlyFees;
     private boolean editable;
 
-    public CorporateSubscriber(double monthlyFees, boolean editable, int subscriberID, String restrictions, boolean readOnly) {
-        super(subscriberID, restrictions, readOnly);
+    public CorporateSubscriber(double monthlyFees, boolean editable, String subscriptionType, int subscriptionPeriod, String username) {
+        super(subscriptionType, subscriptionPeriod, username);
         this.monthlyFees = monthlyFees;
         this.editable = editable;
     }
 
-    public CorporateSubscriber(double monthlyFees, boolean editable, int subscriberID) {
-        super(subscriberID);
+    public CorporateSubscriber(double monthlyFees, boolean editable) {
         this.monthlyFees = monthlyFees;
         this.editable = editable;
     }
@@ -46,6 +45,5 @@ public class CorporateSubscriber extends Subscriber{
     public boolean canShareEditable() {
         return false;
     }
-    
     
 }
