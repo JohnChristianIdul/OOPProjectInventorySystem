@@ -61,7 +61,6 @@ public class CreateInventory extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(31, 31, 31));
 
-        tfSubID.setBackground(new java.awt.Color(255, 255, 255));
         tfSubID.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tfSubID.setForeground(new java.awt.Color(31, 31, 31));
         tfSubID.addActionListener(new java.awt.event.ActionListener() {
@@ -84,7 +83,6 @@ public class CreateInventory extends javax.swing.JFrame {
             }
         });
 
-        taDescription.setBackground(new java.awt.Color(255, 255, 255));
         taDescription.setColumns(20);
         taDescription.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         taDescription.setForeground(new java.awt.Color(31, 31, 31));
@@ -135,7 +133,6 @@ public class CreateInventory extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Storage Description:");
 
-        tfInventoryName.setBackground(new java.awt.Color(255, 255, 255));
         tfInventoryName.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tfInventoryName.setForeground(new java.awt.Color(31, 31, 31));
         tfInventoryName.addActionListener(new java.awt.event.ActionListener() {

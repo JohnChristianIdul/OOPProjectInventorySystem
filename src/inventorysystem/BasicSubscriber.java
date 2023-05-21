@@ -10,9 +10,8 @@ package inventorysystem;
  */
 public class BasicSubscriber extends Subscriber{
     
-    public BasicSubscriber(int subscriberID, String restrictions, boolean readOnly) {
-        super(subscriberID, restrictions, readOnly);
+    public BasicSubscriber(String subscriptionType, int subscriptionPeriod, String username) {
+        super(subscriptionType, subscriptionPeriod, username);
     }
-    
     
 }

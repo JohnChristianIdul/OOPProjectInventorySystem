@@ -14,18 +14,34 @@ public class Verification {
     private double amount;
     private double payable;
     private String transactionType;
+    private int subscriptionPeriod;
+    private String subscriptionType;
     private int status;
 
-    public Verification(int transactionID, String username, double amount, double payable, String transactionType, int status) {
+    public Verification(int transactionID, String username, double amount, double payable, String transactionType, int subscriptionPeriod, String subscriptionType, int status) {
         this.transactionID = transactionID;
         this.username = username;
         this.amount = amount;
         this.payable = payable;
         this.transactionType = transactionType;
+        this.subscriptionPeriod = subscriptionPeriod;
+        this.subscriptionType = subscriptionType;
+        this.status = status;
+    }
+
+    public Verification(String username, double amount, double payable, String transactionType, int subscriptionPeriod, String subscriptionType, int status) {
+        this.username = username;
+        this.amount = amount;
+        this.payable = payable;
+        this.transactionType = transactionType;
+        this.subscriptionPeriod = subscriptionPeriod;
+        this.subscriptionType = subscriptionType;
         this.status = status;
     }
     
     
+    public Verification() {
+    }
 
     public int getTransactionID() {
         return transactionID;
@@ -73,6 +89,22 @@ public class Verification {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getSubscriptionPeriod() {
+        return subscriptionPeriod;
+    }
+
+    public void setSubscriptionPeriod(int subscriptionPeriod) {
+        this.subscriptionPeriod = subscriptionPeriod;
+    }
+
+    public String getSubscriptionType() {
+        return subscriptionType;
+    }
+
+    public void setSubscriptionType(String subscriptionType) {
+        this.subscriptionType = subscriptionType;
     }
     
     

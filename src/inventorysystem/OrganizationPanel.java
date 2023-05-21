@@ -88,6 +88,7 @@ public class OrganizationPanel extends javax.swing.JFrame {
         btnClear = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        btnSubscribe = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -188,6 +189,13 @@ public class OrganizationPanel extends javax.swing.JFrame {
             }
         });
 
+        btnSubscribe.setText("Subscribe");
+        btnSubscribe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubscribeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -196,11 +204,11 @@ public class OrganizationPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
-                        .addGap(32, 32, 32))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSubscribe))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -252,7 +260,8 @@ public class OrganizationPanel extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtUsername)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(btnSubscribe))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -427,6 +436,13 @@ public class OrganizationPanel extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void btnSubscribeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubscribeActionPerformed
+        // TODO add your handling code here:
+        Subscription s = new Subscription(txtUsername.getText(), conn.subscriptionType(txtUsername.getText()));
+        s.show();
+        s.setLocationRelativeTo(null);
+    }//GEN-LAST:event_btnSubscribeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -470,6 +486,7 @@ public class OrganizationPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnIsActive;
     private javax.swing.JButton btnIsInactive;
     private javax.swing.ButtonGroup btnStatus;
+    private javax.swing.JButton btnSubscribe;
     private javax.swing.JButton btnUpdateEmp;
     private javax.swing.JComboBox<String> cbRestrict;
     private javax.swing.JButton jButton1;

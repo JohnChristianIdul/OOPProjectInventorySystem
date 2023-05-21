@@ -392,4 +392,118 @@ public class Connect {
         }
         return num;
     }
+    
+    public void createAccount(Account a) {
+        //SALERA
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        try {
+            stmt = conn.createStatement();
+            sql = "select * from account where username = '"+a.getUsername()+"'";
+            rs = stmt.executeQuery(sql);
+            if(!rs.next()) {
+                sql = "insert into account values('"+a.getUsername()+"', '"+a.getPassword()+"', '"+a.getAccountType()+"')";
+                stmt.executeUpdate(sql);
+            } else {
+                throw new IllegalArgumentException("Username already exists");
+            }
+            
+        }catch(SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void subscribe(Verification v) {
+        //SALERA
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        try {
+            stmt = conn.createStatement();
+            String id = getSubscriberID(v.getUsername()).getString(1);
+            sql = "insert into verification (amount, subscriberID, transactionType) values("+v.getAmount()+", '"+id+"', '"+v.getTransactionType()+"')";
+            stmt.executeUpdate(sql);
+        }catch(SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public ResultSet getSubscriberID(String username) {
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        
+        try {
+            stmt = conn.createStatement();
+            sql = "select subscriberID from subscriber where username='" + username + "'" ;
+            rs = stmt.executeQuery(sql);
+            if(rs.next()) {
+                return rs;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+        
+    public void subscribeAsBasic(Subscriber s) {
+    //SALERA
+    Statement stmt;
+    String sql;
+    ResultSet rs;
+    
+        try {
+            stmt = conn.createStatement();
+            sql = "select * from account where username='"+s.getUsername()+"'";
+            rs = stmt.executeQuery(sql);
+            if(!rs.next()) {
+                // If username does not exist in the 'account' table, handle this scenario. For example:
+                JOptionPane.showMessageDialog(null, "Account with username " + s.getUsername() + " does not exist.");
+            } else {
+                sql = "select * from subscriber where username='"+s.getUsername()+"'";
+                rs = stmt.executeQuery(sql);
+                if(!rs.next()) {
+                    sql = "insert into subscriber (subscriptionType, username, subscriptionPeriod) values('"+s.getSubscriptionType()+"','"+s.getUsername()+"',"+s.getSubscriptionPeriod()+")";
+                    stmt.executeUpdate(sql);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot subscribe");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void updateBalance(String username, double payable) {
+        //SALERA
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        
+        try {
+            stmt = conn.createStatement();
+            sql = "update subscriber set balance="+payable+" where username='" + username + "'";
+            stmt.executeUpdate(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String subscriptionType(String username) {
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        try {
+            stmt = conn.createStatement();
+            sql = "select subscriptionType from subscriber where username='"+username+"'";
+            rs = stmt.executeQuery(sql);
+            if(rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

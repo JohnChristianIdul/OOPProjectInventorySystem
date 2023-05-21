@@ -16,7 +16,9 @@ public class InventorySystem {
     public static void main(String[] args) {
         // TODO code application logic here
         Login loginPanel = new Login();
-          loginPanel.show();
+        loginPanel.show();
+        loginPanel.setLocationRelativeTo(null);
+        
     }
     
 }

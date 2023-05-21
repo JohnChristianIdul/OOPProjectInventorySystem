@@ -9,41 +9,56 @@ package inventorysystem;
  * @author daugd
  */
 public class Subscriber {
-    private int subscriberID;
-    private String restrictions;
-    private boolean readOnly;
+    private int subscriptionID;
+    private String subscriptionType;
+    private int subscriptionPeriod;
+    private String username;
 
-    public Subscriber(int subscriberID, String restrictions, boolean readOnly) {
-        this.subscriberID = subscriberID;
-        this.restrictions = restrictions;
-        this.readOnly = readOnly;
+    public Subscriber() {
+        setSubscriptionType("");
+        setUsername("");
     }
 
-    public Subscriber(int subscriberID) {
-        this.subscriberID = subscriberID;
+    public Subscriber(String subscriptionType, int subscriptionPeriod, String username) {
+        this(subscriptionType, subscriptionPeriod);
+        setUsername(username);
+    }
+    
+    
+    public Subscriber(String subscriptionType, int subscriptionPeriod) {
+        setSubscriptionType(subscriptionType);
+        setSubscriptionPeriod(subscriptionPeriod);
     }
 
-    public int getSubscriberID() {
-        return subscriberID;
+    public int getSubscriptionID() {
+        return subscriptionID;
     }
 
-    public void setSubscriberID(int subscriberID) {
-        this.subscriberID = subscriberID;
+    public void setSubscriptionID(int subscriptionID) {
+        this.subscriptionID = subscriptionID;
     }
 
-    public String getRestrictions() {
-        return restrictions;
+    public String getSubscriptionType() {
+        return subscriptionType;
     }
 
-    public void setRestrictions(String restrictions) {
-        this.restrictions = restrictions;
+    public void setSubscriptionType(String subscriptionType) {
+        this.subscriptionType = subscriptionType;
     }
 
-    public boolean isReadOnly() {
-        return readOnly;
+    public int getSubscriptionPeriod() {
+        return subscriptionPeriod;
     }
 
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
+    public void setSubscriptionPeriod(int subscriptionPeriod) {
+        this.subscriptionPeriod = subscriptionPeriod;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
